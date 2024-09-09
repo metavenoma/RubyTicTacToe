@@ -12,7 +12,7 @@ RSpec.describe Board do
     end
   end
 
-  describe 'place_move' do
+  describe '#place_move' do
     it 'places player move on the board' do
       @board.place_move(1, 1, 1)
       expect(@board.grid[1][1]).to eq('X')
@@ -21,6 +21,32 @@ RSpec.describe Board do
     it 'returns an error when the position is not available' do
       @board.place_move(0, 0, 1)
       expect { @board.place_move(0, 0, 2) }.to raise_error('Position not available.')
+    end
+  end
+
+  describe '#winner?' do
+    it 'returns true if there is a winning row' do
+      @board.place_move(0, 0, 1)
+      @board.place_move(0, 1, 1)
+      @board.place_move(0, 2, 1)
+      expect(@board.rows_winner?).to eq(true)
+      expect(@board.winner?).to eq(true) 
+    end
+
+    it 'returns true if there is a winning column' do
+      @board.place_move(0, 0, 1)
+      @board.place_move(1, 0, 1)
+      @board.place_move(2, 0, 1)
+      expect(@board.columns_winner?).to eq(true)
+      expect(@board.winner?).to eq(true)
+    end
+
+    it 'returns true if there is a winning diagonal' do
+      @board.place_move(0, 0, 1)
+      @board.place_move(1, 1, 1)
+      @board.place_move(2, 2, 1)
+      expect(@board.diagonals_winner?).to eq(true)
+      expect(@board.winner?).to eq(true)
     end
   end
 end
