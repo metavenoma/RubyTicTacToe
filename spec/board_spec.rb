@@ -11,4 +11,16 @@ RSpec.describe Board do
       expect(@board.grid).to eq(expected_grid)
     end
   end
+
+  describe 'place_move' do
+    it 'places player move on the board' do
+      @board.place_move(1, 1, 1)
+      expect(@board.grid[1][1]).to eq('X')
+    end
+
+    it 'returns an error when the position is not available' do
+      @board.place_move(0, 0, 1)
+      expect { @board.place_move(0, 0, 2) }.to raise_error('Position not available.')
+    end
+  end
 end

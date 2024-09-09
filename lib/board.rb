@@ -9,6 +9,11 @@ class Board
   def size
     @size
   end
+  
+  def place_move(row, col, player)
+    raise 'Position not available.' if @grid[row][col] != " "
+    @grid[row][col] = (player == 1 ? 'X' : 'O')
+  end
 
   def print_grid
     puts "\n\t\t\t    " + (1..size).to_a.join("   ")
