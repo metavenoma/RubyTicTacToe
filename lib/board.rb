@@ -14,7 +14,13 @@ class Board
     raise 'Position not available.' if @grid[row][col] != ' '
     @grid[row][col] = (player == 1 ? 'X' : 'O')
   end
-  
+ 
+  def draw?
+    game_over = @grid.flatten.none? { |cell| cell == ' ' }
+    no_winner = !winner?
+    game_over && no_winner
+  end
+
   def winner?
     rows_winner? || columns_winner? || diagonals_winner?
   end

@@ -49,4 +49,39 @@ RSpec.describe Board do
       expect(@board.winner?).to eq(true)
     end
   end
+  
+  describe '#draw?' do
+    it 'returns true if the game is over and is a draw' do
+      draw_example = [
+        ['X', 'O', 'X'],
+        ['O', 'X', 'X'],
+        ['O', 'X', 'O'],
+      ]
+
+      @board.instance_variable_set(:@grid, draw_example)
+      expect(@board.draw?).to eq(true)
+    end
+
+    it 'returns false if the board is not full' do
+      not_full_grid = [
+        ['X', 'X', 'O'],
+        [' ', 'X', 'O'],
+        ['O', 'O', 'X'],
+      ]
+
+      @board.instance_variable_set(:@grid, not_full_grid)
+      expect(@board.draw?).to eq(false)
+    end
+
+    it 'returns false if the board is full but there is a winner' do
+      full_grid_with_winner = [
+        ['X', 'O', 'X'],
+        ['X', 'O', 'X'],
+        ['O', 'O', 'O'],
+      ]
+
+      @board.instance_variable_set(:@grid, full_grid_with_winner)
+      expect(@board.draw?).to eq(false)
+    end
+  end
 end
