@@ -11,8 +11,9 @@ class Board
   end
   
   def place_move(row, col, player)
+    raise 'Position does not exist.' if (row >= size || col >= size)
     raise 'Position not available.' if @grid[row][col] != ' '
-    @grid[row][col] = (player == 1 ? 'X' : 'O')
+    @grid[row][col] = player == "1" ? 'X' : 'O'
   end
  
   def draw?
