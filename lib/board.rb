@@ -1,7 +1,7 @@
 class Board
   attr_reader :grid
 
-  def initialize(size)
+  def initialize(size = 3)
     @size = size
     @grid = Array.new(size) { Array.new(size, ' ') }
   end
@@ -22,21 +22,23 @@ class Board
   end
 
   def winner?
-    rows_winner? || columns_winner? || diagonals_winner?
+    lines = rows + columns + diagonals
+    lines.any? { |line| line.uniq.length == 1 && line.uniq != [' '] }
   end
   
-  def rows_winner?
-    @grid.any? { |row| row.uniq.size == 1 && row.first != ' ' }
+  def rows
+    @grid
   end
   
-  def columns_winner?
-    @grid.transpose.any? { |col| col.uniq.size == 1 && col.first != ' ' }
+  def columns
+    @grid.transpose
   end
   
-  def diagonals_winner?
-    forwards_diagonal = [@grid[0][0], @grid[1][1], @grid[2][2]]
-    backwards_diagonal = [@grid[0][2], @grid[1][1], @grid[2][0]]
-    [forwards_diagonal, backwards_diagonal].any? { |diag| diag.uniq.size == 1 && diag.first != ' ' }
+  def diagonals
+    [
+      (0...size).collect { |i| @grid[i][i] },
+      (0...size).collect { |i| @grid[i][size - 1 - i] }
+    ]
   end
 
   def print_grid

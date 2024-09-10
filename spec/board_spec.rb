@@ -29,7 +29,6 @@ RSpec.describe Board do
       @board.place_move(0, 0, 1)
       @board.place_move(0, 1, 1)
       @board.place_move(0, 2, 1)
-      expect(@board.rows_winner?).to eq(true)
       expect(@board.winner?).to eq(true) 
     end
 
@@ -37,7 +36,6 @@ RSpec.describe Board do
       @board.place_move(0, 0, 1)
       @board.place_move(1, 0, 1)
       @board.place_move(2, 0, 1)
-      expect(@board.columns_winner?).to eq(true)
       expect(@board.winner?).to eq(true)
     end
 
@@ -45,7 +43,6 @@ RSpec.describe Board do
       @board.place_move(0, 0, 1)
       @board.place_move(1, 1, 1)
       @board.place_move(2, 2, 1)
-      expect(@board.diagonals_winner?).to eq(true)
       expect(@board.winner?).to eq(true)
     end
   end
