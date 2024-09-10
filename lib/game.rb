@@ -24,7 +24,7 @@ class Game
 
   def restart_game
     @board = Board.new(board.size)
-    @current_player = 1
+    @current_player = '1'
   end
 
   def parse_input(input)
