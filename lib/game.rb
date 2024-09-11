@@ -1,10 +1,10 @@
 require_relative "board"
+require_relative "print_ascii"
 
 class Game
   attr_reader :board, :current_player
 
-  def initialize(size = 3)
-    @board = Board.new(size)
+  def initialize
     @current_player = '1'
   end
   
@@ -17,7 +17,7 @@ class Game
     return true if input.match?(/^RR$/) || input.match?(/^XX$/)
     
     last_row = (64 + board.size).chr
-    last_col = board.size.to_s
+    last_col = board.size.to_i
 
     input.match?(/^[A-#{last_row}][1-#{last_col}]$/)
   end
@@ -34,6 +34,27 @@ class Game
   end
 
   def play
+    print_header
+    board_size = nil
+    
+    loop do
+      puts "Enter the size of the board (3-9):"
+      input = gets.chomp
+      
+      begin
+        board_size = Integer(input)
+        if board_size.between?(3, 9)
+          break
+        else
+          puts "Invalid size. Please enter a number between 3 and 9."
+        end
+      rescue ArgumentError
+        puts "Invalid input. Please enter a valid number."
+      end
+    end
+    
+    @board = Board.new(board_size)
+
     loop do
       board.print_grid
       puts "Player #{@current_player}, enter your move."
@@ -42,10 +63,10 @@ class Game
       if valid_input?(input)
         case input.upcase
         when "XX"
-          puts "exit game"
+          print_goodbye
           break
         when "RR"
-          puts "game restart"
+          print_restart
           restart_game
           next
         else
@@ -53,11 +74,12 @@ class Game
           if board.place_move(row, col, @current_player)
             if board.winner?
               board.print_grid
-              puts "Player #{@current_player} wins!"
+              puts @current_player
+              print_winner(@current_player)
               break
             elsif board.draw?
               board.print_grid
-              puts "draw"
+              print_winner(0)
               break
             end
             switch_player
