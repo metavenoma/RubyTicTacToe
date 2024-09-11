@@ -14,7 +14,7 @@ class Game
   
   def valid_input?(input)
     input = input.upcase
-    return true if input.match?(/^RR$/) || input.match?(/^XX$/)
+    return true if input.match?(/^RR$/) || input.match?(/^XX$/) || input.match?(/^HH$/)
     
     last_row = (64 + board.size).chr
     last_col = board.size.to_i
@@ -34,16 +34,30 @@ class Game
   end
 
   def play
+    clear_screen
     print_header
+    error_code = 0
     board_size = nil
-    
+     
     loop do
       puts "Enter the size of the board (3-9):"
-      input = gets.chomp
+      input = gets.chomp.upcase
       
+      case input
+      when "XX"
+        print_goodbye
+        return
+      when "HH"
+        print_controls
+        next
+      when "RR"
+        next
+      end
+
       begin
         board_size = Integer(input)
         if board_size.between?(3, 9)
+          clear_screen
           break
         else
           puts "Invalid size. Please enter a number between 3 and 9."
@@ -54,8 +68,22 @@ class Game
     end
     
     @board = Board.new(board_size)
-
     loop do
+      print_header
+      case error_code
+      when 1
+        print_invalid_move
+        error_code = 0
+      when 2
+        print_invalid_input
+        error_code = 0
+      when 3
+        print_controls
+        error_code = 0
+      when 4
+        print_restart
+        error_code = 0
+      end
       board.print_grid
       puts "Player #{@current_player}, enter your move."
       
@@ -65,8 +93,13 @@ class Game
         when "XX"
           print_goodbye
           break
+        when "HH"
+          clear_screen
+          error_code = 3
+          next
         when "RR"
-          print_restart
+          error_code = 4
+          clear_screen
           restart_game
           next
         else
@@ -74,7 +107,6 @@ class Game
           if board.place_move(row, col, @current_player)
             if board.winner?
               board.print_grid
-              puts @current_player
               print_winner(@current_player)
               break
             elsif board.draw?
@@ -84,12 +116,13 @@ class Game
             end
             switch_player
           else
-            puts "Invalid move."
+            error_code = 1
           end
         end
       else
-        puts "Invalid input"
+        error_code = 2
       end
+      clear_screen
     end
   end
 end
